@@ -1,0 +1,206 @@
+# -*- mode: org; -*-
+
+#+title:JavaScript Algorithms and Data Structures
+#+subtitle:{{{date}}} {{{version}}}
+#+date:2019-10-01 13:36
+#+macro:version Version 0.0.1
+
+#+name:org-babel-load-file
+#+header: :results silent :exports results
+#+begin_src emacs-lisp
+(org-babel-tangle-file "JavaScript_A-DS.org")
+#+end_src
+
+* Data Structures
+** Linked Lists
+
+{{{heading(About Linked Lists)}}}
+
+A linked list is a data structure that stores multiple values in a
+linear fashion, with values connected by links.  Each value is
+contained in a node, which also contains one or more links to other
+nodes in the list.  Singly linked lists contain links moving in a
+single direction (forwards), whereas doubley linked lists contain
+links moving in two directions (forwards and backwards).
+
+{{{subheading(Advantages of Linked Lists)}}}
+
+The advantage of linked lists is that they can contain an arbitrary
+number of values using limited space.  There is no need to
+pre-allocate memory for a specific number of values.  The number of
+values in a linked list can expand and shrink dynamically during run
+time.
+
+{{{subheading(Disadvantages of Linked Lists)}}}
+
+One disadvantage of a linked list is that accessing values can take up
+to O(n) time.
+
+{{{heading(Design of Linked Lists)}}}
+
+{{{subheading(Nodes)}}}
+
+Linked lists are made up of nodes, which contain at a minimum
+
+- a value
+
+- a reference, or link, to the next node
+
+
+{{{subheading(Linked List Class)}}}
+
+Linked lists are often created around a class which contains methods
+for working with the nodes.  Common methods include:
+
+- ~new~ :: create a new Linked List
+
+- ~add~ :: add a new Node
+
+- ~get~ :: get the value of a Node
+
+- ~remove~ :: remove or delete a Node
+
+- ~values~ :: iterate over the values of a Linked List
+
+*** Singly Linked Lists
+
+**** Create Singly Linked List Package
+
+#+name:create-singly-linked-list-package
+#+header: :results output :exports results
+#+begin_src sh
+yarn -yp init
+yarn add --dev jest
+#+end_src
+
+#+name:give-test-script-to-package
+#+header: :results output :exports results
+#+begin_src js
+const fs = require('fs');
+const package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+package.scripts = {"tests": "jest"};
+fs.writeFileSync("package.json", JSON.stringify(package, null, 2));
+#+end_src
+
+**** The Node Class
+This Node Class creates a new Node with a data value.  The data value
+cannot be =undefined=, or it will throw a =ReferenceError=.  The class
+contains both a getter and a setter accessor methods.
+
+#+caption:The Single Node Class
+#+name:single-node-class
+#+header: :mkdirp yes
+#+begin_src js -n :tangle src/single_node.js
+    module.exports = class SingleNode {
+        constructor(data) {
+            if (typeof data === 'undefined') {
+                throw new ReferenceError();
+            }
+            this._data = data;
+            this._next = null;
+        }
+
+        get data() {
+            return this._data;
+        }
+
+        set data(data) {
+            if (typeof data === 'undefined') {
+                throw new ReferenceError();
+            }
+            this._data = data;
+        }
+
+        get next() {
+            return this._next;
+        }
+
+        set next(next) {
+            if (typeof next === 'undefined') {
+                throw new RefererenceError();
+            }
+            this._next = next;
+        }
+    }
+#+end_src
+
+**** The Node Test Class
+
+#+caption:The Single Node Test Class
+#+name:single-node-test-class
+#+header: :mkdirp yes
+#+begin_src js -n :tangle tests/single_node.test.js
+          const Node = require('../src/single_node');
+
+          describe('Test the Node Constructor', () => {
+              test('Create a Node with simple values: 1 and \'a\'', () => {
+                  expect(new Node(1)).toBeInstanceOf(Node);
+                  expect(new Node('a')).toBeInstanceOf(Node);
+              });
+              test('Should throw a ReferenceError without data argument', () => {
+                  expect(() => {
+                      new Node();
+                  }).toThrow(ReferenceError);
+              });
+        });
+
+        describe('Make sure Node object has proper properties', () => {
+            const n = new Node(1);
+            test('Check for a _data property', () => {
+                expect(n).toHaveProperty('_data', 1);
+            });
+            test('Check for a _next property', () => {
+                expect(n).toHaveProperty('_next', null);
+            });
+        });
+
+        describe('Test the Node getter and setter properties', () => {
+            test('getter for data should return the proper value', () => {
+                const n = new Node(1);
+                expect(n.data).toEqual(1);
+            });
+            test('setter for data should set a new value', () => {
+                const n = new Node(1);
+                n.data = 2;
+                expect(n.data).toEqual(2);
+            });
+            test('getter for next should return the proper value', () => {
+                const n = new Node(1);
+                expect(n.next).toBeNull();
+            });
+            test('setter for next should set a new value', () => {
+                const n = new Node(1);
+                const nn = new Node(2);
+                n.next = nn;
+                expect(n.next).toStrictEqual(nn);
+            });
+        });
+#+end_src
+
+**** The LinkedList Class
+
+*** Doubley Linked Lists
+* Algorithms
+* Makefile
+
+#+name:Makefile
+#+begin_src make -n :tangle Makefile
+clean-world:
+	-rm *.{texi,info}
+	-rm -rf src/ tests/ node_modules/
+	-rm package.json yarn.lock
+#+end_src
+
+* Index
+  :PROPERTIES:
+  :index:    cp
+  :unnumbered: t
+  :END:
+* Macro Definitions
+#+macro: heading @@texinfo:@heading @@$1
+#+macro: subheading @@texinfo:@subheading @@$1
+* Local Variables                                                  :noexport:
+# Local Variables:
+# time-stamp-pattern:"8/^\\#\\+date:%4:y-%02m-%02d %02H:%02M$"
+# eval: (org-indent-mode)
+# End:
