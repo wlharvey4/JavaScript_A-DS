@@ -2,8 +2,8 @@
 
 #+title:JavaScript Algorithms and Data Structures
 #+subtitle:{{{date}}} {{{version}}}
-#+date:2019-10-01 13:36
-#+macro:version Version 0.0.1
+#+date:2019-10-01 13:46
+#+macro:version Version 0.0.2
 
 #+name:org-babel-load-file
 #+header: :results silent :exports results
@@ -66,6 +66,9 @@ for working with the nodes.  Common methods include:
 
 **** Create Singly Linked List Package
 
+This code installs a ~package.json~ into the current directory, then
+addes a =scripts= key to the ~package.json~ file that runs Jest tests.
+
 #+name:create-singly-linked-list-package
 #+header: :results output :exports results
 #+begin_src sh
@@ -82,10 +85,11 @@ package.scripts = {"tests": "jest"};
 fs.writeFileSync("package.json", JSON.stringify(package, null, 2));
 #+end_src
 
-**** The Node Class
-This Node Class creates a new Node with a data value.  The data value
-cannot be =undefined=, or it will throw a =ReferenceError=.  The class
-contains both a getter and a setter accessor methods.
+**** The SingleNode Class
+This SingleNode Class creates a new SingleNode with =data= and =next=
+properties.  The =data= value cannot be =undefined=, or it will throw
+a =ReferenceError=.  The class contains both a getter and a setter
+accessor methods for both properties.
 
 #+caption:The Single Node Class
 #+name:single-node-class
@@ -124,57 +128,60 @@ contains both a getter and a setter accessor methods.
     }
 #+end_src
 
-**** The Node Test Class
+**** The SingleNode Test Class
+
+This set of tests tests the creation of an instance of the SingleNode
+class.
 
 #+caption:The Single Node Test Class
 #+name:single-node-test-class
 #+header: :mkdirp yes
 #+begin_src js -n :tangle tests/single_node.test.js
-          const Node = require('../src/single_node');
+    const Node = require('../src/single_node');
 
-          describe('Test the Node Constructor', () => {
-              test('Create a Node with simple values: 1 and \'a\'', () => {
-                  expect(new Node(1)).toBeInstanceOf(Node);
-                  expect(new Node('a')).toBeInstanceOf(Node);
-              });
-              test('Should throw a ReferenceError without data argument', () => {
-                  expect(() => {
-                      new Node();
-                  }).toThrow(ReferenceError);
-              });
-        });
+  describe('Test the Node Constructor', () => {
+      test('Create a Node with simple values: 1 and \'a\'', () => {
+          expect(new Node(1)).toBeInstanceOf(Node);
+          expect(new Node('a')).toBeInstanceOf(Node);
+      });
+      test('Should throw a ReferenceError without data argument', () => {
+          expect(() => {
+              new Node();
+          }).toThrow(ReferenceError);
+      });
+  });
 
-        describe('Make sure Node object has proper properties', () => {
-            const n = new Node(1);
-            test('Check for a _data property', () => {
-                expect(n).toHaveProperty('_data', 1);
-            });
-            test('Check for a _next property', () => {
-                expect(n).toHaveProperty('_next', null);
-            });
-        });
+  describe('Make sure Node object has proper properties', () => {
+      const n = new Node(1);
+      test('Check for a _data property', () => {
+          expect(n).toHaveProperty('_data', 1);
+      });
+      test('Check for a _next property', () => {
+          expect(n).toHaveProperty('_next', null);
+      });
+  });
 
-        describe('Test the Node getter and setter properties', () => {
-            test('getter for data should return the proper value', () => {
-                const n = new Node(1);
-                expect(n.data).toEqual(1);
-            });
-            test('setter for data should set a new value', () => {
-                const n = new Node(1);
-                n.data = 2;
-                expect(n.data).toEqual(2);
-            });
-            test('getter for next should return the proper value', () => {
-                const n = new Node(1);
-                expect(n.next).toBeNull();
-            });
-            test('setter for next should set a new value', () => {
-                const n = new Node(1);
-                const nn = new Node(2);
-                n.next = nn;
-                expect(n.next).toStrictEqual(nn);
-            });
-        });
+  describe('Test the Node getter and setter properties', () => {
+      test('getter for data should return the proper value', () => {
+          const n = new Node(1);
+          expect(n.data).toEqual(1);
+      });
+      test('setter for data should set a new value', () => {
+          const n = new Node(1);
+          n.data = 2;
+          expect(n.data).toEqual(2);
+      });
+      test('getter for next should return the proper value', () => {
+          const n = new Node(1);
+          expect(n.next).toBeNull();
+      });
+      test('setter for next should set a new value', () => {
+          const n = new Node(1);
+          const nn = new Node(2);
+          n.next = nn;
+          expect(n.next).toStrictEqual(nn);
+      });
+  });
 #+end_src
 
 **** The LinkedList Class
@@ -196,7 +203,7 @@ clean-world:
   :index:    cp
   :unnumbered: t
   :END:
-* Macro Definitions
+* Macro Definitions                                                :noexport:
 #+macro: heading @@texinfo:@heading @@$1
 #+macro: subheading @@texinfo:@subheading @@$1
 * Local Variables                                                  :noexport:
