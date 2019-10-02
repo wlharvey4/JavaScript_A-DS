@@ -2,8 +2,8 @@
 
 #+title:JavaScript Algorithms and Data Structures
 #+subtitle:{{{date}}} {{{version}}}
-#+date:2019-10-02 13:57
-#+macro:version Version 0.0.3
+#+date:2019-10-02 14:54
+#+macro:version Version 0.0.4
 
 #+name:org-babel-load-file
 #+header: :results silent :exports results
@@ -260,16 +260,43 @@ The class will have methods to
 #+name:singly-linked-list-class-test
 #+begin_src js -n :tangle tests/singly_linked_list.test.js
   const {SinglyLinkedList, HEAD, TAIL} = require('../src/singly_linked_list.js');
+  const SingleNode = require('../src/single_node');
 
-  describe('Test the constructor of the SinglyLinkedList Class', () => {
-      test('Make sure a new class instance is an instanceOf SinglyLinkedList', () => {
+  describe('The constructor of the SinglyLinkedList Class', () => {
+      it('produces an instance of a SinglyLinkedList', () => {
           expect(new SinglyLinkedList()).toBeDefined();
           expect(new SinglyLinkedList()).toBeInstanceOf(SinglyLinkedList);
       });
-      test('Make sure a new class instance has a HEAD and a TAIL', () => {
+      it('has the properties HEAD and TAIL', () => {
           const sll = new SinglyLinkedList();
-          const slls = Object.getOwnPropertySymbols(sll);
-          expect(slls).toEqual([HEAD, TAIL]);
+          expect(sll.hasOwnProperty(HEAD)).toBe(true);
+          expect(sll.hasOwnProperty(TAIL)).toBe(true);
+      });
+  });
+
+  describe('A Singlylinkedlist instance', () => {
+      let sll;
+      beforeEach(() => {
+          sll = new SinglyLinkedList();
+      });
+
+      it('has the add method', () => {
+          expect(sll).toHaveProperty('add');
+      });
+      it('adds a new value to an empty list', () => {
+          expect(sll.add(1)).toBeInstanceOf(SingleNode);
+      });
+      it('stores the correct value', () => {
+          expect(sll.add(1).data).toBe(1);
+          expect(sll.add(0).data).toBe(0);
+      });
+      it('throws when attempting to store an undefined value but not a null value', () => {
+          expect(() => {
+              sll.add(undefined);
+          }).toThrow(ReferenceError);
+          expect(() => {
+              sll.add(null);
+          }).not.toThrow();
       });
   });
 #+end_src
