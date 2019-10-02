@@ -2,8 +2,8 @@
 
 #+title:JavaScript Algorithms and Data Structures
 #+subtitle:{{{date}}} {{{version}}}
-#+date:2019-10-02 14:54
-#+macro:version Version 0.0.4
+#+date:2019-10-02 15:21
+#+macro:version Version 0.0.5
 
 #+name:org-babel-load-file
 #+header: :results silent :exports results
@@ -275,13 +275,15 @@ The class will have methods to
   });
 
   describe('A Singlylinkedlist instance', () => {
+      it('has the add method', () => {
+          expect(new SinglyLinkedList()).toHaveProperty('add');
+      });
+  });
+
+  describe('The add method', () => {
       let sll;
       beforeEach(() => {
           sll = new SinglyLinkedList();
-      });
-
-      it('has the add method', () => {
-          expect(sll).toHaveProperty('add');
       });
       it('adds a new value to an empty list', () => {
           expect(sll.add(1)).toBeInstanceOf(SingleNode);
@@ -297,6 +299,18 @@ The class will have methods to
           expect(() => {
               sll.add(null);
           }).not.toThrow();
+      });
+      it('correctly sets HEAD and TAIL on add in an empty List', () => {
+          const n = sll.add(1);
+          expect(n).toBe(sll[HEAD]);
+          expect(n).toBe(sll[TAIL]);
+      });
+      it('correctly sets HEAD and TAIL on add in a non-empty List', () => {
+          const n0 = sll.add(1);
+          const n1 = sll.add(2);
+          const n2 = sll.add(3);
+          expect(n0).toBe(sll[HEAD]);
+          expect(n2).toBe(sll[TAIL]);
       });
   });
 #+end_src
