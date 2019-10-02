@@ -2,8 +2,8 @@
 
 #+title:JavaScript Algorithms and Data Structures
 #+subtitle:{{{date}}} {{{version}}}
-#+date:2019-10-01 13:46
-#+macro:version Version 0.0.2
+#+date:2019-10-02 13:57
+#+macro:version Version 0.0.3
 
 #+name:org-babel-load-file
 #+header: :results silent :exports results
@@ -184,7 +184,95 @@ class.
   });
 #+end_src
 
-**** The LinkedList Class
+**** The SinglyLinkedList Class
+In object-oriented languages like JavaScript, it’s customary to create
+a class to encapsulate this functionality.
+
+#+cindex:symbol property
+#+cindex:@code{head} property
+The SinglyLinkedList class represents a linked list and will contain
+methods for interacting with the data it contains.  The only property
+is a symbol property called =head= that will contain a pointer to the
+first node in the list.  A symbol property is used instead of a string
+property to make it clear that this property is not intended to be
+modified outside of the class.
+
+The class will have methods to
+
+- add data
+
+- retrieve data
+
+- remove data
+
+- iterate over the data
+
+
+#+caption:Singly Linked List Class Implementation
+#+name:singly-linked-list-class-implementation
+#+header: :noweb tangle
+#+begin_src js -n :tangle src/singly_linked_list.js
+  const SingleNode = require('./single_node.js');
+
+  const HEAD = Symbol("head");
+  const TAIL = Symbol("tail");
+
+  class SinglyLinkedList {
+      constructor() {
+          this[HEAD] = null,
+          this[TAIL] = null;
+      }
+
+      <<singly-linked-list-add-method>>
+      <<singly-linked-list-get-method>>
+      <<singly-linked-list-remove-method>>
+      <<singly-linked-list-values-method>>
+  }
+
+  module.exports = {
+    SinglyLinkedList,
+    HEAD,
+    TAIL
+  };
+
+#+end_src
+
+***** The Singly Linked List Class Add Method
+#+caption:Add Method
+#+name:singly-linked-list-add-method
+#+begin_src js +n
+  add(data) {
+      const node = new SingleNode(data); // create a new node
+      const last = this[TAIL]; // save TAIL in a temp var
+
+      this[TAIL] = node; // set TAIL to the new node
+      if (last) last.next = node; // set prior last to point to new last
+
+      if (!this[HEAD]) this[HEAD] = node; // if HEAD is null, set it to the new node
+
+      return node; // return the node
+  }
+#+end_src
+
+**** The Singly Linked List Test File
+
+#+caption:Test file for SinglyLinkedList Class
+#+name:singly-linked-list-class-test
+#+begin_src js -n :tangle tests/singly_linked_list.test.js
+  const {SinglyLinkedList, HEAD, TAIL} = require('../src/singly_linked_list.js');
+
+  describe('Test the constructor of the SinglyLinkedList Class', () => {
+      test('Make sure a new class instance is an instanceOf SinglyLinkedList', () => {
+          expect(new SinglyLinkedList()).toBeDefined();
+          expect(new SinglyLinkedList()).toBeInstanceOf(SinglyLinkedList);
+      });
+      test('Make sure a new class instance has a HEAD and a TAIL', () => {
+          const sll = new SinglyLinkedList();
+          const slls = Object.getOwnPropertySymbols(sll);
+          expect(slls).toEqual([HEAD, TAIL]);
+      });
+  });
+#+end_src
 
 *** Doubley Linked Lists
 * Algorithms
